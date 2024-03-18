@@ -1,19 +1,22 @@
 from telebot import types, TeleBot
-import os, random
+import os
+import random
 import telebot
 
 
 forma, design1, checkin10 = [], [], []
 
 
-bot: TeleBot = telebot.TeleBot('')
+bot: TeleBot = telebot.TeleBot(
+    '6963016657:AAFE0hI6za9QJKYIS_4PVcnSlyN5ENLHecY')
 
 
 @bot.message_handler(commands=['start'])
 def menu1(message):
 
     letsgo = types.InlineKeyboardMarkup()
-    short = types.InlineKeyboardButton("Выбрать маникюр", callback_data='nails')
+    short = types.InlineKeyboardButton(
+        "Выбрать маникюр", callback_data='nails')
     letsgo.row(short)
 
     check = types.InlineKeyboardButton('Записаться', callback_data='check')
@@ -22,16 +25,18 @@ def menu1(message):
     address = types.InlineKeyboardButton('Адрес', callback_data='address')
     letsgo.row(address)
 
-    feedback = types.InlineKeyboardButton('Оставить отзыв', callback_data='feedback')
+    feedback = types.InlineKeyboardButton(
+        'Оставить отзыв', callback_data='feedback')
     letsgo.row(feedback)
 
     contacts = types.InlineKeyboardButton('Контакты', callback_data='contacts')
     letsgo.row(contacts)
 
-    bot.send_message(message.chat.id, "Привет, это наш маникюр-бот. Начнем?", reply_markup=letsgo)
+    bot.send_message(
+        message.chat.id, "Привет, это наш маникюр-бот. Начнем?", reply_markup=letsgo)
+
 
 @bot.callback_query_handler(func=lambda callback: True)
-
 def menu(callback):
     if callback.data == 'nails':
         length = types.ReplyKeyboardMarkup(resize_keyboard=True)
@@ -39,7 +44,8 @@ def menu(callback):
         length.row(short)
         long = types.KeyboardButton("Длинные")
         length.row(long)
-        bot.send_message(callback.message.chat.id, "Выбери длину", reply_markup=length)
+        bot.send_message(callback.message.chat.id,
+                         "Выбери длину", reply_markup=length)
         bot.register_next_step_handler(callback.message, formanails)
 
     elif callback.data == 'check':
@@ -50,14 +56,16 @@ def menu(callback):
         bot.register_next_step_handler(callback.message, checkin2)
 
     elif callback.data == 'address':
-        back = types.InlineKeyboardMarkup()
-        backbtn = types.InlineKeyboardButton('Вернуться в меню', callback_data='menu')
-        back.row(backbtn)
-        bot.send_message(callback.message.chat.id, "Мы находимся по адресу : **** \nhttps://yandex.ru/maps/9/lipetsk/house/lenina_sobornaya_ploshchad_1/Z0AYcw5oSEQCQFtofXpxeHpgYQ==/?ll=39.600156%2C52.609518&z=18", reply_markup=back)
+        back = types.InlineKeyboardButton('Назад', callback_data='menu')
+        back_markup = types.InlineKeyboardMarkup().add(back)
+        address_message = "Мы находимся по адресу : Пр. Ленина 154, корпус 3, стеклянный вход, перед паребриком налево \n<a href='https://yandex.ru/maps/10716/balashiha/geo/mikrorayon_olgino/1612744559/?ll=37.986017%2C55.743261&z=15.31'>Посмотреть на карте</a>"
+        bot.send_message(callback.message.chat.id, address_message,
+                         parse_mode='HTML', reply_markup=back_markup)
 
     elif callback.data == 'feedback':
         back = types.InlineKeyboardMarkup()
-        backbtn = types.InlineKeyboardButton('Вернуться в меню', callback_data='menu')
+        backbtn = types.InlineKeyboardButton(
+            'Вернуться в меню', callback_data='menu')
         back.row(backbtn)
         bot.send_message(callback.message.chat.id,
                          "Здесь ты можешь написать отзыв по нашей работе",
@@ -66,14 +74,16 @@ def menu(callback):
 
     elif callback.data == 'contacts':
         back = types.InlineKeyboardMarkup()
-        backbtn = types.InlineKeyboardButton('Вернуться в меню', callback_data='menu')
+        backbtn = types.InlineKeyboardButton(
+            'Вернуться в меню', callback_data='menu')
         back.row(backbtn)
         bot.send_message(callback.message.chat.id, 'Вконтакте: https://vk.com/am.stage \n'
                                                    'Телеграмм-канал: https://web.telegram.org/a/#6324719377 \n')
 
     elif callback.data == 'more':
         if cpt > 1:
-            pic = open('images/' + allp + '/' + str(random.randint(1, cpt)) + '.jpg', 'rb')
+            pic = open('images/' + allp + '/' +
+                       str(random.randint(1, cpt)) + '.jpg', 'rb')
         else:
             pic = open('images/' + allp + '/1.jpg', 'rb')
 
@@ -91,7 +101,8 @@ def menu(callback):
 
     elif callback.data == 'menu':
         letsgo = types.InlineKeyboardMarkup()
-        short = types.InlineKeyboardButton("Выбрать маникюр", callback_data='nails')
+        short = types.InlineKeyboardButton(
+            "Выбрать маникюр", callback_data='nails')
         letsgo.row(short)
 
         check = types.InlineKeyboardButton('Записаться', callback_data='check')
@@ -100,13 +111,15 @@ def menu(callback):
         address = types.InlineKeyboardButton('Адрес', callback_data='address')
         letsgo.row(address)
 
-        feedback = types.InlineKeyboardButton('Оставить отзыв', callback_data='feedback')
+        feedback = types.InlineKeyboardButton(
+            'Оставить отзыв', callback_data='feedback')
         letsgo.row(feedback)
 
         bot.send_message(callback.message.chat.id, "Меню", reply_markup=letsgo)
 
     else:
         pass
+
 
 def formanails(message):
     global forma
@@ -150,7 +163,8 @@ def design(message):
     design_list.row(glitter)
     hard = types.KeyboardButton("Сложный дизайн")
     design_list.row(hard)
-    bot.send_message(message.chat.id, 'Выбери дизайн', reply_markup=design_list)
+    bot.send_message(message.chat.id, 'Выбери дизайн',
+                     reply_markup=design_list)
 
     bot.register_next_step_handler(message, ready)
 
@@ -162,9 +176,11 @@ def ready(message):
     global allp, cpt
 
     allp = forma_str + '.' + design1_str1
-    cpt = sum([len(files) for r, d, files in os.walk("C:\\Users\\Mikhail\\Downloads\\Нужное\\Ксюша\\Программирование\\PycharmProjects\\nails-bot\\images\\"+allp)])
+    cpt = sum([len(files) for r, d, files in os.walk(
+        "C:\\Users\\Mikhail\\Downloads\\Нужное\\Ксюша\\Программирование\\PycharmProjects\\nails-bot\\images\\"+allp)])
     if cpt > 1:
-        pic = open('images/' + allp + '/' + str(random.randint(1, cpt)) + '.jpg', 'rb')
+        pic = open('images/' + allp + '/' +
+                   str(random.randint(1, cpt)) + '.jpg', 'rb')
     else:
         pic = open('images/' + allp + '/1.jpg', 'rb')
 
@@ -183,26 +199,29 @@ def ready(message):
 def checkin2(message):
     bot.send_message(message.chat.id, 'Напиши свое имя и номер телефона')
     checkin10 = message.text
-    bot.send_message(781732345, checkin10)
+    bot.send_message(224008722, checkin10)
     bot.register_next_step_handler(message, checkin3)
 
 
 def checkin3(message):
     checkin11 = message.text
 
-    bot.send_message(781732345, checkin11)
+    bot.send_message(224008722, checkin11)
     back = types.InlineKeyboardMarkup()
-    backbtn = types.InlineKeyboardButton('Вернуться в меню', callback_data='menu')
+    backbtn = types.InlineKeyboardButton(
+        'Вернуться в меню', callback_data='menu')
     back.row(backbtn)
-    bot.send_message(message.chat.id, 'Ты записана! Скоро с тобой свяжется менеджер для подтверждения записи)', reply_markup=back)
+    bot.send_message(
+        message.chat.id, 'Ты записана! Скоро с тобой свяжется менеджер для подтверждения записи)', reply_markup=back)
 
 
 def feedback2(message):
     back = types.InlineKeyboardMarkup()
-    backbtn = types.InlineKeyboardButton('Вернуться в меню', callback_data='menu')
+    backbtn = types.InlineKeyboardButton(
+        'Вернуться в меню', callback_data='menu')
     back.row(backbtn)
     feedback = message.text
-    bot.send_message(781732345, feedback)
+    bot.send_message(224008722, feedback)
     bot.send_message(message.chat.id,
                      "Спасибо за твой отзыв! Мы обязательно его прочитаем и дадим обратную связь",
                      reply_markup=back)
